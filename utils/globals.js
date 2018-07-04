@@ -9,9 +9,11 @@ const carparkTypes = {
 };
 
 const systemTypes = {
-
+    ELECTRONIC: "ELECTRONIC PARKING",
+    COUPON: "COUPON PARKING"
 }
 
 module.exports = {
-    carparkTypes
+    carparkTypes,
+    systemTypes
 }
