@@ -52,3 +52,41 @@ test("Searching with systemType 'electronic' should return an array carparks wit
 		expect(systemType).toEqual(systemTypes.ELECTRONIC);
 	});
 });
+
+test("Searching with systemType 'electronic' should return an array carparks with 'electronic' in the type field", async () => {
+	const response = await request(app).get(
+		"/carparks/search?systemType=electronic"
+	);
+	expect(response.status).toEqual(200);
+	expect(Array.isArray(response.body)).toEqual(true);
+	response.body.forEach(cp => {
+		let systemType = cp["type_of_parking_system"];
+		expect(systemType).toEqual(systemTypes.ELECTRONIC);
+	});
+});
+
+test("GET /carparks/:id should return a carpark with that id", async () => {
+	const response = await request(app).get("/carparks/B27");
+	expect(response.status).toEqual(200);
+	expect(response.body["car_park_no"]).toEqual("B27");
+});
+
+test("PUT /carparks/:id should take in a valid update body and return the updated carpark", async () => {    
+    const MOCK_UPDATE = {
+        address: "updated address"
+    }
+    const UPDATED_CARPARK = {
+        car_park_no: "B27",
+        address: "updated address",
+        x_coord: "39654.1953",
+        y_coord: "35145.7266",
+        car_park_type: "SURFACE CAR PARK",
+        type_of_parking_system: "ELECTRONIC PARKING",
+        short_term_parking: "WHOLE DAY",
+        free_parking: "SUN & PH FR 7AM-10.30PM",
+        night_parking: "YES" 
+    }
+    const response = await request(app).put("/carparks/B27").send(MOCK_UPDATE);
+	expect(response.status).toEqual(200);
+	expect(response.body).toMatchObject(UPDATED_CARPARK);
+});

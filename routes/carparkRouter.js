@@ -30,16 +30,13 @@ const getCarparks = (req, res) => {
 };
 
 // Search params:
-// keyword (search through address), carpark type, carpark system type, short term parking type,
-// free parking type, night parking availability
+// keyword (search through address), carparkType, systemType
 const searchCarparks = (req, res) => {
 	let query = req.query;
 	let results = carparks;
-	//console.log(query);
 
 	if (isEmptyObj(query)) {
 		results = []; // do some error handling here
-		//res.json("No search queries");
 	}
 
 	// Filter by keyword first
@@ -63,12 +60,35 @@ const searchCarparks = (req, res) => {
 		});
 	}
 
-	// console.log(req.query);
 	res.json(results);
 };
 
+const getCarparkById = (req, res) => {
+    let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
+    
+    if (carpark) {
+		res.json(carpark);
+    } else {
+        res.status(404);
+        next();
+    }	
+}
+
+const updateCarparkWithId = (req, res) => {
+    let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
+
+    if (carpark) {
+		res.json({...carpark, ...req.body});
+    } else {
+        res.status(404);
+        next();
+    }
+}
+
 router.get("/", getCarparks);
 router.get("/search", searchCarparks);
+router.get("/:id", getCarparkById);
+router.put("/:id", updateCarparkWithId);
 
 // const getArrayOfTypes = (dataArr, keyName) => {
 // 	let typeArr = dataArr.reduce((accArr, curr) => {
