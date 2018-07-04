@@ -41,7 +41,7 @@ test("Searching with carparkType 'basement' should return an array carparks with
 });
 
 // GET /carparks/search?systemType=electronic
-test.only("Searching with systemType 'electronic' should return an array carparks with 'electronic' in the type field", async () => {
+test("Searching with systemType 'electronic' should return an array carparks with 'electronic' in the type field", async () => {
 	const response = await request(app).get(
 		"/carparks/search?systemType=electronic"
 	);

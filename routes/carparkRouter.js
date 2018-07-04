@@ -1,14 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const carparks = require("../utils/carpark-data.json"); //Array of carpark objects
-const carparkTypes = require("../utils/globals").carparkTypes;
-
-let queryParams = {
-	carparkType: "car_park_type"
-};
-
-// parking system types:
-// [ 'ELECTRONIC PARKING', 'COUPON PARKING' ]
+const { carparkTypes, systemTypes } = require("../utils/globals");
 
 // short term parking types:
 // [ 'WHOLE DAY', '7AM-7PM', 'NO', '7AM-10.30PM' ]
@@ -66,7 +59,7 @@ const searchCarparks = (req, res) => {
     // Filter by parking system type
 	if (query.systemType) {
 		results = results.filter(cp => {
-			return cp[""] === carparkTypes[query.carparkType];
+			return cp["type_of_parking_system"] === systemTypes[query.systemType];
 		});
 	}
 
