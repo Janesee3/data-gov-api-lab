@@ -1,11 +1,8 @@
 const express = require("express");
 const app = express();
-const carparkData = require("./utils/carpark-data.json");
+const carparkRouter = require("./routes/carparkRouter");
 
 app.use(express.json());
-
-app.get("/", (req, res) => {
-    res.json(carparkData);
-});
+app.use(carparkRouter);
 
 module.exports = app;
