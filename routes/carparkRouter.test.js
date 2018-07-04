@@ -71,6 +71,11 @@ test("GET /carparks/:id should return a carpark with that id", async () => {
 	expect(response.body["car_park_no"]).toEqual("B27");
 });
 
+test("GET /carparks/:id using invalid id should return 404 status", async () => {
+	const response = await request(app).get("/carparks/bbbbbbbb");
+	expect(response.status).toEqual(404);
+});
+
 test("PUT /carparks/:id should take in a valid update body and return the updated carpark", async () => {    
     const MOCK_UPDATE = {
         address: "updated address"
@@ -89,4 +94,26 @@ test("PUT /carparks/:id should take in a valid update body and return the update
     const response = await request(app).put("/carparks/B27").send(MOCK_UPDATE);
 	expect(response.status).toEqual(200);
 	expect(response.body).toMatchObject(UPDATED_CARPARK);
+});
+
+test("PUT /carparks/:id using invalid id should return 404 status", async () => {
+	const response = await request(app).put("/carparks/bbbbbbbb");
+	expect(response.status).toEqual(404);
+});
+
+test("POST /carparks should take in a carpark json and return an array of carparks that now contains this new carpark", async () => {    
+    const MOCK_CARPARK = {
+        car_park_no: "TEST",
+        address: "Test Address",
+        x_coord: "1953",
+        y_coord: "7266",
+        car_park_type: "SURFACE CAR PARK",
+        type_of_parking_system: "ELECTRONIC PARKING",
+        short_term_parking: "WHOLE DAY",
+        free_parking: "SUN & PH FR 7AM-10.30PM",
+        night_parking: "YES" 
+    }
+    const response = await request(app).post("/carparks").send(MOCK_CARPARK);
+    expect(response.status).toEqual(200);
+	expect(response.body.includes(MOCK_CARPARK)).toEqual(true);
 });

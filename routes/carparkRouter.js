@@ -29,6 +29,10 @@ const getCarparks = (req, res) => {
 	res.json(carparks);
 };
 
+const createCarpark = (req, res) => {
+    res.json("");
+}
+
 // Search params:
 // keyword (search through address), carparkType, systemType
 const searchCarparks = (req, res) => {
@@ -63,7 +67,7 @@ const searchCarparks = (req, res) => {
 	res.json(results);
 };
 
-const getCarparkById = (req, res) => {
+const getCarparkById = (req, res, next) => {
     let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
     
     if (carpark) {
@@ -74,7 +78,7 @@ const getCarparkById = (req, res) => {
     }	
 }
 
-const updateCarparkWithId = (req, res) => {
+const updateCarparkWithId = (req, res, next) => {
     let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
 
     if (carpark) {
@@ -86,6 +90,7 @@ const updateCarparkWithId = (req, res) => {
 }
 
 router.get("/", getCarparks);
+router.post("/", createCarpark);
 router.get("/search", searchCarparks);
 router.get("/:id", getCarparkById);
 router.put("/:id", updateCarparkWithId);
