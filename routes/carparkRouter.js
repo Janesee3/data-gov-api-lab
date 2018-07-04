@@ -1,15 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const carparks = require("../utils/carpark-data.json"); //Array of carpark objects
+const carparkTypes = require("../utils/globals").carparkTypes;
 
-// carpark types:
-// [ 'BASEMENT CAR PARK',
-//   'MULTI-STOREY CAR PARK',
-//   'SURFACE CAR PARK',
-//   'MECHANISED CAR PARK',
-//   'COVERED CAR PARK',
-//   'MECHANISED AND SURFACE CAR PARK',
-//   'SURFACE/MULTI-STOREY CAR PARK' ]
+let queryParams = {
+	carparkType: "car_park_type"
+};
 
 // parking system types:
 // [ 'ELECTRONIC PARKING', 'COUPON PARKING' ]
@@ -36,12 +32,50 @@ const carparks = require("../utils/carpark-data.json"); //Array of carpark objec
 //     "night_parking": "YES"
 // }
 
-
 const getCarparks = (req, res) => {
 	res.json(carparks);
 };
 
+// Search params:
+// keyword (search through address), carpark type, carpark system type, short term parking type,
+// free parking type, night parking availability
+const searchCarparks = (req, res) => {
+	let query = req.query;
+	let results = carparks;
+	//console.log(query);
+
+	if (isEmptyObj(query)) {
+		results = []; // do some error handling here
+		//res.json("No search queries");
+	}
+
+	// Filter by keyword first
+	if (query.keyword) {
+		results = results.filter(cp => {
+			return cp.address.toLowerCase().includes(query.keyword.toLowerCase());
+		});
+	}
+
+	// Filter by carpark type
+	if (query.carparkType) {
+		results = results.filter(cp => {
+			return cp["car_park_type"] === carparkTypes[query.carparkType];
+		});
+    }
+    
+    // Filter by parking system type
+	if (query.systemType) {
+		results = results.filter(cp => {
+			return cp[""] === carparkTypes[query.carparkType];
+		});
+	}
+
+	// console.log(req.query);
+	res.json(results);
+};
+
 router.get("/", getCarparks);
+router.get("/search", searchCarparks);
 
 // const getArrayOfTypes = (dataArr, keyName) => {
 // 	let typeArr = dataArr.reduce((accArr, curr) => {
@@ -55,5 +89,9 @@ router.get("/", getCarparks);
 // 	}, []);
 // 	return typeArr;
 // };
+
+const isEmptyObj = obj => {
+	return Object.keys(obj).length === 0;
+};
 
 module.exports = router;
