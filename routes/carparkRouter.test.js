@@ -115,5 +115,6 @@ test("POST /carparks should take in a carpark json and return an array of carpar
     }
     const response = await request(app).post("/carparks").send(MOCK_CARPARK);
     expect(response.status).toEqual(200);
-	expect(response.body.includes(MOCK_CARPARK)).toEqual(true);
+    let carpark = response.body.find(cp => cp["car_park_no"] == "TEST");
+	expect(carpark).toMatchObject(MOCK_CARPARK);
 });

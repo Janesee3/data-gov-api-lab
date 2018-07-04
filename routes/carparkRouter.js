@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const carparks = require("../utils/carpark-data.json"); //Array of carpark objects
+let carparks = require("../utils/carpark-data.json"); //Array of carpark objects
 const { carparkTypes, systemTypes } = require("../utils/globals");
 
 // short term parking types:
@@ -30,7 +30,8 @@ const getCarparks = (req, res) => {
 };
 
 const createCarpark = (req, res) => {
-    res.json("");
+    carparks = [...carparks, req.body]
+	res.json(carparks);
 }
 
 // Search params:
