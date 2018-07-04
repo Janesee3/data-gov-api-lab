@@ -36,7 +36,7 @@ test("Searching with carparkType 'basement' should return an array carparks with
 	expect(Array.isArray(response.body)).toEqual(true);
 	response.body.forEach(cp => {
 		let carparkType = cp["car_park_type"];
-		expect(carparkType).toEqual(carparkTypes.BASEMENT);
+		expect(carparkType).toEqual(carparkTypes.basement);
 	});
 });
 
@@ -49,19 +49,7 @@ test("Searching with systemType 'electronic' should return an array carparks wit
 	expect(Array.isArray(response.body)).toEqual(true);
 	response.body.forEach(cp => {
 		let systemType = cp["type_of_parking_system"];
-		expect(systemType).toEqual(systemTypes.ELECTRONIC);
-	});
-});
-
-test("Searching with systemType 'electronic' should return an array carparks with 'electronic' in the type field", async () => {
-	const response = await request(app).get(
-		"/carparks/search?systemType=electronic"
-	);
-	expect(response.status).toEqual(200);
-	expect(Array.isArray(response.body)).toEqual(true);
-	response.body.forEach(cp => {
-		let systemType = cp["type_of_parking_system"];
-		expect(systemType).toEqual(systemTypes.ELECTRONIC);
+		expect(systemType).toEqual(systemTypes.electronic);
 	});
 });
 
@@ -76,22 +64,24 @@ test("GET /carparks/:id using invalid id should return 404 status", async () => 
 	expect(response.status).toEqual(404);
 });
 
-test("PUT /carparks/:id should take in a valid update body and return the updated carpark", async () => {    
-    const MOCK_UPDATE = {
-        address: "updated address"
-    }
-    const UPDATED_CARPARK = {
-        car_park_no: "B27",
-        address: "updated address",
-        x_coord: "39654.1953",
-        y_coord: "35145.7266",
-        car_park_type: "SURFACE CAR PARK",
-        type_of_parking_system: "ELECTRONIC PARKING",
-        short_term_parking: "WHOLE DAY",
-        free_parking: "SUN & PH FR 7AM-10.30PM",
-        night_parking: "YES" 
-    }
-    const response = await request(app).put("/carparks/B27").send(MOCK_UPDATE);
+test("PUT /carparks/:id should take in a valid update body and return the updated carpark", async () => {
+	const MOCK_UPDATE = {
+		address: "updated address"
+	};
+	const UPDATED_CARPARK = {
+		car_park_no: "B27",
+		address: "updated address",
+		x_coord: "39654.1953",
+		y_coord: "35145.7266",
+		car_park_type: "SURFACE CAR PARK",
+		type_of_parking_system: "ELECTRONIC PARKING",
+		short_term_parking: "WHOLE DAY",
+		free_parking: "SUN & PH FR 7AM-10.30PM",
+		night_parking: "YES"
+	};
+	const response = await request(app)
+		.put("/carparks/B27")
+		.send(MOCK_UPDATE);
 	expect(response.status).toEqual(200);
 	expect(response.body).toMatchObject(UPDATED_CARPARK);
 });
@@ -101,20 +91,35 @@ test("PUT /carparks/:id using invalid id should return 404 status", async () => 
 	expect(response.status).toEqual(404);
 });
 
-test("POST /carparks should take in a carpark json and return an array of carparks that now contains this new carpark", async () => {    
-    const MOCK_CARPARK = {
-        car_park_no: "TEST",
-        address: "Test Address",
-        x_coord: "1953",
-        y_coord: "7266",
-        car_park_type: "SURFACE CAR PARK",
-        type_of_parking_system: "ELECTRONIC PARKING",
-        short_term_parking: "WHOLE DAY",
-        free_parking: "SUN & PH FR 7AM-10.30PM",
-        night_parking: "YES" 
-    }
-    const response = await request(app).post("/carparks").send(MOCK_CARPARK);
-    expect(response.status).toEqual(200);
-    let carpark = response.body.find(cp => cp["car_park_no"] == "TEST");
+test("POST /carparks should take in a carpark json and return an array of carparks that now contains this new carpark", async () => {
+	const MOCK_CARPARK = {
+		car_park_no: "TEST",
+		address: "Test Address",
+		x_coord: "1953",
+		y_coord: "7266",
+		car_park_type: "SURFACE CAR PARK",
+		type_of_parking_system: "ELECTRONIC PARKING",
+		short_term_parking: "WHOLE DAY",
+		free_parking: "SUN & PH FR 7AM-10.30PM",
+		night_parking: "YES"
+	};
+	const response = await request(app)
+		.post("/carparks")
+		.send(MOCK_CARPARK);
+	expect(response.status).toEqual(200);
+	let carpark = response.body.find(cp => cp["car_park_no"] == "TEST");
 	expect(carpark).toMatchObject(MOCK_CARPARK);
+});
+
+test("DELETE /carparks/:id should delete carpark with that id from the dataset", async () => {
+	const response = await request(app).delete("/carparks/B27");
+	expect(response.status).toEqual(200);
+	expect(response.body).toMatchObject({
+		message: "Successfully deleted carpark 'B27'!"
+	});
+});
+
+test("PUT /carparks/:id using invalid id should return 404 status", async () => {
+	const response = await request(app).delete("/carparks/bbbbbbbb");
+	expect(response.status).toEqual(404);
 });

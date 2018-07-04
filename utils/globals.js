@@ -1,19 +1,19 @@
 const carparkTypes = {
-	BASEMENT: "BASEMENT CAR PARK",
-	MULTISTOREY: "MULTI-STOREY CAR PARK",
-	SURFACE: "SURFACE CAR PARK",
-	MECHANISM: "MECHANISED CAR PARK",
-	COVERED: "COVERED CAR PARK",
-	MECHANISED_AND_SURFACE: "MECHANISED AND SURFACE CAR PARK",
-	SURFACE_AND_MULTISTOREY: "SURFACE/MULTI-STOREY CAR PARK"
+	basement: "BASEMENT CAR PARK",
+	multistorey: "MULTI-STOREY CAR PARK",
+	surface: "SURFACE CAR PARK",
+	mechanism: "MECHANISED CAR PARK",
+	covered: "COVERED CAR PARK",
+	mechanised_and_surface: "MECHANISED AND SURFACE CAR PARK",
+	surface_and_multistorey: "SURFACE/MULTI-STOREY CAR PARK"
 };
 
 const systemTypes = {
-    ELECTRONIC: "ELECTRONIC PARKING",
-    COUPON: "COUPON PARKING"
-}
+	electronic: "ELECTRONIC PARKING",
+	coupon: "COUPON PARKING"
+};
 
 module.exports = {
-    carparkTypes,
-    systemTypes
-}
+	carparkTypes,
+	systemTypes
+};
