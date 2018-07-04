@@ -1,12 +1,11 @@
 const express = require("express");
-
 const app = express();
-
-const data = require("./utils/data.json");
-console.log(data);
+const carparkData = require("./utils/carpark-data.json");
 
 app.use(express.json());
 
-// TODO: Create CRUD endpoints for your data!
+app.get("/", (req, res) => {
+    res.json(carparkData);
+});
 
 module.exports = app;
