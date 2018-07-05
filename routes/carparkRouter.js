@@ -30,9 +30,9 @@ const getCarparks = (req, res) => {
 };
 
 const createCarpark = (req, res) => {
-    carparks = [...carparks, req.body]
+	carparks = [...carparks, req.body];
 	res.json(carparks);
-}
+};
 
 // Search params:
 // keyword (search through address), carparkType, systemType
@@ -54,14 +54,19 @@ const searchCarparks = (req, res) => {
 	// Filter by carpark type
 	if (query.carparkType) {
 		results = results.filter(cp => {
-			return cp["car_park_type"].toUpperCase() == carparkTypes[query.carparkType];
+			return (
+				cp["car_park_type"].toUpperCase() == carparkTypes[query.carparkType]
+			);
 		});
-    }
-    
-    // Filter by parking system type
+	}
+
+	// Filter by parking system type
 	if (query.systemType) {
 		results = results.filter(cp => {
-			return cp["type_of_parking_system"].toUpperCase() === systemTypes[query.systemType];
+			return (
+				cp["type_of_parking_system"].toUpperCase() ===
+				systemTypes[query.systemType]
+			);
 		});
 	}
 
@@ -69,45 +74,47 @@ const searchCarparks = (req, res) => {
 };
 
 const getCarparkById = (req, res, next) => {
-    let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
-    
-    if (carpark) {
+	let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
+
+	if (carpark) {
 		res.json(carpark);
-    } else {
-        res.status(404);
-        next();
-    }	
-}
+	} else { 
+		res.status(404);
+		next();
+	}
+};
 
 const updateCarparkWithId = (req, res, next) => {
-    let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
+	let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
 
-    if (carpark) {
-		res.json({...carpark, ...req.body});
-    } else {
-        res.status(404);
-        next();
-    }
-}
+	if (carpark) {
+		res.json({ ...carpark, ...req.body });
+	} else {
+		res.status(404);
+		next();
+	}
+};
 
 const deleteCarparkWithId = (req, res, next) => {
-    let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
+	let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
 
-    if (carpark) {
-        carparks = carparks.filter((cp) => { return cp["car_park_no"] !== req.params.id })
-        res.json({ message: `Successfully deleted carpark '${req.params.id}'!`})
-    } else {
-        res.status(404);
-        next();
-    }
-}
+	if (carpark) {
+		carparks = carparks.filter(cp => {
+			return cp["car_park_no"] !== req.params.id;
+		});
+		res.json({ message: `Successfully deleted carpark '${req.params.id}'!` });
+	} else {
+		res.status(404);
+		next();
+	}
+};
 
 router.get("/", getCarparks);
 router.post("/", createCarpark);
 router.get("/search", searchCarparks);
 router.get("/:id", getCarparkById);
 router.put("/:id", updateCarparkWithId);
-router.delete("/:id", deleteCarparkWithId)
+router.delete("/:id", deleteCarparkWithId);
 
 // const getArrayOfTypes = (dataArr, keyName) => {
 // 	let typeArr = dataArr.reduce((accArr, curr) => {
