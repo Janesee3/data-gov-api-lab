@@ -25,13 +25,45 @@ const { carparkTypes, systemTypes } = require("../utils/globals");
 //     "night_parking": "YES"
 // }
 
+// Returns true if the input object is a carpark object
+const isCarpark = cp => {
+	return (
+		cp.car_park_no &&
+		cp.address &&
+		cp.x_coord &&
+		cp.y_coord &&
+		cp.car_park_type &&
+		cp.type_of_parking_system &&
+		cp.short_term_parking &&
+		cp.free_parking &&
+		cp.night_parking
+	);
+};
+
+// Does a search through local dataset for carpark with the input id
+// returns 'undefined' if no carpark found
+const findCarparkWithId = id => {
+	return carparks.find(cp => cp["car_park_no"] == id);
+};
+
 const getCarparks = (req, res) => {
 	res.json(carparks);
 };
 
-const createCarpark = (req, res) => {
+const createCarpark = (req, res, next) => {
+	if (!isCarpark(req.body)) {
+		next({ status: 400, msg: "The request body is not a valid carpark object!"});
+		return;
+	}
+
+	if (findCarparkWithId(req.body.car_park_no)) {
+		res.status(400);
+		next({ status: 400, msg: `There is already a carpark with id ${req.body.car_park_no}!`});
+		return;
+	}
+
 	carparks = [...carparks, req.body];
-	res.json(carparks);
+	res.status(201).json();
 };
 
 // Search params:

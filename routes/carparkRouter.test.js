@@ -96,7 +96,7 @@ test("PUT /carparks/:id using invalid id should return 404 status", async () => 
 	expect(response.status).toEqual(404);
 });
 
-test("POST /carparks should take in a carpark json and return an array of carparks that now contains this new carpark", async () => {
+test("POST /carparks should take in a carpark object and return status 201 upon success", async () => {
 	const MOCK_CARPARK = {
 		car_park_no: "TEST",
 		address: "Test Address",
@@ -111,9 +111,41 @@ test("POST /carparks should take in a carpark json and return an array of carpar
 	const response = await request(app)
 		.post("/carparks")
 		.send(MOCK_CARPARK);
-	expect(response.status).toEqual(200);
-	let carpark = response.body.find(cp => cp["car_park_no"] == "TEST");
-	expect(carpark).toMatchObject(MOCK_CARPARK);
+	expect(response.status).toEqual(201);
+});
+
+test("POST /carparks using a carpark object whose car_park_no already exists should return 400 error", async () => {
+	const MOCK_CARPARK = {
+		car_park_no: "B72",
+		address: "Test Address",
+		x_coord: "1953",
+		y_coord: "7266",
+		car_park_type: "SURFACE CAR PARK",
+		type_of_parking_system: "ELECTRONIC PARKING",
+		short_term_parking: "WHOLE DAY",
+		free_parking: "SUN & PH FR 7AM-10.30PM",
+		night_parking: "YES"
+	};
+	const response = await request(app)
+		.post("/carparks")
+		.send(MOCK_CARPARK);
+	expect(response.status).toEqual(400);
+});
+
+test("POST /carparks using an invalid object should return 400 error", async () => {
+	const MOCK_CARPARK = {
+		// lacking in some fields
+		address: "Test Address",
+		car_park_type: "SURFACE CAR PARK",
+		type_of_parking_system: "ELECTRONIC PARKING",
+		short_term_parking: "WHOLE DAY",
+		free_parking: "SUN & PH FR 7AM-10.30PM",
+		night_parking: "YES"
+	};
+	const response = await request(app)
+		.post("/carparks")
+		.send(MOCK_CARPARK);
+	expect(response.status).toEqual(400);
 });
 
 test("DELETE /carparks/:id should delete carpark with that id from the dataset", async () => {
