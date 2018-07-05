@@ -78,7 +78,7 @@ const getCarparkById = (req, res, next) => {
 
 	if (carpark) {
 		res.json(carpark);
-	} else { 
+	} else {
 		res.status(404);
 		next();
 	}
@@ -88,6 +88,7 @@ const updateCarparkWithId = (req, res, next) => {
 	let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
 
 	if (carpark) {
+		// dont forget to update the array too!!!
 		res.json({ ...carpark, ...req.body });
 	} else {
 		res.status(404);
