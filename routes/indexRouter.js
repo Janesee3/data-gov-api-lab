@@ -8,3 +8,4 @@ const homeRoute = (req, res) => {
 router.get("/", homeRoute);
 
 module.exports = router;
+  
