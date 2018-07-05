@@ -1,7 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
 const { carparkTypes, systemTypes } = require("../utils/globals");
-const queryParams = require("../routes/carparkRouter").queryParams;
 
 test("GET / should return the welcome message", async () => {
 	const response = await request(app).get("/");

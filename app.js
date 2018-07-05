@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const indexRouter = require("./routes/indexRouter");
 const carparkRouter = require("./routes/carparkRouter");
 
 const carparkErrorHandler = (req, res, next) => {
@@ -10,8 +11,6 @@ const carparkErrorHandler = (req, res, next) => {
 };
 
 app.use(express.json());
-app.use("/", (req, res) => {
-	res.json("Hello!");
-});
+app.use("/", indexRouter);
 app.use("/carparks", carparkRouter, carparkErrorHandler);
 module.exports = app;
