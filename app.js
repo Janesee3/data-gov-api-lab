@@ -10,5 +10,8 @@ const carparkErrorHandler = (req, res, next) => {
 };
 
 app.use(express.json());
+app.use("/", (req, res) => {
+	res.json("Hello!");
+});
 app.use("/carparks", carparkRouter, carparkErrorHandler);
 module.exports = app;
