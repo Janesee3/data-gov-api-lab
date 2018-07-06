@@ -25,40 +25,25 @@ const { carparkTypes, systemTypes } = require("../utils/globals");
 //     "night_parking": "YES"
 // }
 
-// Returns true if the input object is a carpark object
-const isCarpark = cp => {
-	return (
-		cp.car_park_no &&
-		cp.address &&
-		cp.x_coord &&
-		cp.y_coord &&
-		cp.car_park_type &&
-		cp.type_of_parking_system &&
-		cp.short_term_parking &&
-		cp.free_parking &&
-		cp.night_parking
-	);
-};
-
-// Does a search through local dataset for carpark with the input id
-// returns 'undefined' if no carpark found
-const findCarparkWithId = id => {
-	return carparks.find(cp => cp["car_park_no"] == id);
-};
-
 const getCarparks = (req, res) => {
 	res.json(carparks);
 };
 
 const createCarpark = (req, res, next) => {
 	if (!isCarpark(req.body)) {
-		next({ status: 400, msg: "The request body is not a valid carpark object!"});
+		next({
+			status: 400,
+			msg: "The request body is not a valid carpark object!"
+		});
 		return;
 	}
 
 	if (findCarparkWithId(req.body.car_park_no)) {
 		res.status(400);
-		next({ status: 400, msg: `There is already a carpark with id ${req.body.car_park_no}!`});
+		next({
+			status: 400,
+			msg: `There is already a carpark with id ${req.body.car_park_no}!`
+		});
 		return;
 	}
 
@@ -76,31 +61,26 @@ const searchCarparks = (req, res) => {
 		results = []; // do some error handling here
 	}
 
-	// Filter by keyword first
-	if (query.keyword) {
-		results = results.filter(cp => {
-			return cp.address.toLowerCase().includes(query.keyword.toLowerCase());
-		});
-	}
-
-	// Filter by carpark type
-	if (query.carparkType) {
-		results = results.filter(cp => {
-			return (
-				cp["car_park_type"].toUpperCase() == carparkTypes[query.carparkType]
-			);
-		});
-	}
-
-	// Filter by parking system type
-	if (query.systemType) {
-		results = results.filter(cp => {
-			return (
-				cp["type_of_parking_system"].toUpperCase() ===
-				systemTypes[query.systemType]
-			);
-		});
-	}
+	results = results
+		.filter( // Filter by keyword
+			cp =>
+				query.keyword
+					? cp.address.toLowerCase().includes(query.keyword.toLowerCase())
+					: true
+		)
+		.filter( // Filter by carparkType
+			cp =>
+				query.carparkType
+					? cp["car_park_type"].toUpperCase() == carparkTypes[query.carparkType]
+					: true
+		)
+		.filter( // Filter by systemType
+			cp =>
+				query.systemType
+					? cp["type_of_parking_system"].toUpperCase() ===
+					  systemTypes[query.systemType]
+					: true
+		);
 
 	res.json(results);
 };
@@ -120,8 +100,10 @@ const updateCarparkWithId = (req, res, next) => {
 	let carpark = carparks.find(cp => cp["car_park_no"] == req.params.id);
 
 	if (carpark) {
-		// dont forget to update the array too!!!
-		res.json({ ...carpark, ...req.body });
+		// dont forget to update the array too!!!!!!!!!
+		let newCp = { ...carpark, ...req.body };
+		carparks = [...carparks, newCp]; // THIS IS WRONG!!
+		res.json(newCp);
 	} else {
 		res.status(404);
 		next();
@@ -149,10 +131,32 @@ router.get("/:id", getCarparkById);
 router.put("/:id", updateCarparkWithId);
 router.delete("/:id", deleteCarparkWithId);
 
+// **** Utility Methods **** //
+
+// Returns true if the input object is a carpark object
+const isCarpark = cp => {
+	return (
+		cp.car_park_no &&
+		cp.address &&
+		cp.x_coord &&
+		cp.y_coord &&
+		cp.car_park_type &&
+		cp.type_of_parking_system &&
+		cp.short_term_parking &&
+		cp.free_parking &&
+		cp.night_parking
+	);
+};
+
+// Does a search through local dataset for carpark with the input id
+// returns 'undefined' if no carpark found
+const findCarparkWithId = id => {
+	return carparks.find(cp => cp["car_park_no"] == id);
+};
+
 // const getArrayOfTypes = (dataArr, keyName) => {
 // 	let typeArr = dataArr.reduce((accArr, curr) => {
 // 		let currVal = curr[keyName]; // example carparkObj[car_park_type] = BASEMENT CAR PARK
-// 		// console.log(currVal, accArr);
 // 		if (!accArr.includes(currVal)) {
 // 			return [...accArr, currVal];
 // 		} else {
