@@ -2,6 +2,20 @@ const request = require("supertest");
 const app = require("../app");
 const { carparkTypes, systemTypes } = require("../utils/globals");
 
+// If want to test router independently
+
+// when exporting router, use:
+// module.exports = (app) => {
+// 	app.use('/authors, router')
+// }
+
+// in test file:
+// app = express()
+
+// beforeEach --> run authorsRouter(app)
+
+// sample fetch: request(app).get('/authors') blabla
+
 test("GET / should return the welcome message", async () => {
 	const response = await request(app).get("/");
 	expect(response.status).toEqual(200);
